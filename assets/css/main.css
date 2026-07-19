@@ -963,15 +963,18 @@ main, .footer {
 }
 .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 
-/* ---------- Reveal on scroll (enhances an already-visible default) ---------- */
+/* ---------- Reveal on scroll (enhances an already-visible default) ----------
+   Content is visible by default. Only once main.js has run and confirmed it can
+   drive the observer does it add .reveal-on, which opts into the hidden start
+   state. If the script 404s or throws, the page still renders in full. */
 
-.js .reveal {
+.reveal-on .reveal {
   opacity: 0.001; transform: translateY(22px);
   transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
 }
-.js .reveal.in-view { opacity: 1; transform: none; }
-.js .method-step.reveal { transition-delay: calc(var(--stagger, 0) * 70ms); }
-.js .story-card.reveal, .js .teacher-card.reveal, .js .price-card.reveal { transition-delay: calc(var(--stagger, 0) * 60ms); }
+.reveal-on .reveal.in-view { opacity: 1; transform: none; }
+.reveal-on .method-step.reveal { transition-delay: calc(var(--stagger, 0) * 70ms); }
+.reveal-on .story-card.reveal, .reveal-on .teacher-card.reveal, .reveal-on .price-card.reveal { transition-delay: calc(var(--stagger, 0) * 60ms); }
 
 /* ---------- Responsive ---------- */
 
@@ -1012,7 +1015,7 @@ main, .footer {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .reveal { opacity: 1; transform: none; transition: opacity 200ms ease; }
+  .reveal-on .reveal { opacity: 1; transform: none; transition: opacity 200ms ease; }
   .strip-track, .strip-row-alt .strip-track { animation: none; }
   .hero-chip-top, .hero-chip-bottom { animation: none; }
   .hero-place-dot { animation: none; }

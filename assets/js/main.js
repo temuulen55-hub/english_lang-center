@@ -112,19 +112,29 @@
   /* ============ Reveal on scroll ============ */
 
   var reveals = $$('.reveal');
-  reveals.forEach(function (el, i) {
+  reveals.forEach(function (el) {
     var siblings = $$('.reveal', el.parentElement);
     el.style.setProperty('--stagger', siblings.indexOf(el));
   });
+
+  function revealAll() {
+    reveals.forEach(function (el) { el.classList.add('in-view'); });
+  }
+
   if ('IntersectionObserver' in window && !reduceMotion) {
+    // Opt into the hidden start state only now that we know we can undo it.
+    document.documentElement.classList.add('reveal-on');
     var revObs = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (e) {
         if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
     reveals.forEach(function (el) { revObs.observe(el); });
+    // Safety net: if the observer never fires (background tab, headless renderer,
+    // print, or a prerender bot), show everything rather than ship a blank page.
+    window.setTimeout(revealAll, 2500);
   } else {
-    reveals.forEach(function (el) { el.classList.add('in-view'); });
+    revealAll();
   }
 
   /* ============ Hero rotating word ============ */
